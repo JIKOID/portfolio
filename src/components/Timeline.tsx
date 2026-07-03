@@ -1,3 +1,4 @@
+import Markdown from 'markdown-to-jsx'
 import { timelineEntries } from '../data/timeline'
 
 function Timeline() {
@@ -22,7 +23,9 @@ function Timeline() {
             </div>
             <div className="timeline-content">
               <h3>{entry.title}</h3>
-              <p>{entry.description}</p>
+              <div className="timeline-description">
+                <Markdown>{entry.description}</Markdown>
+              </div>
               {entry.current && <span className="timeline-badge">현재</span>}
             </div>
           </li>

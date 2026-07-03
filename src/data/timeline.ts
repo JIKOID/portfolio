@@ -3,38 +3,52 @@ export interface TimelineEntry {
   month: number
   title: string
   description: string
-  current?: boolean
+  current: boolean
 }
 
-// 새로운 경력/활동을 추가하려면 이 배열에 항목을 하나 더 넣으면 됩니다.
-// 정렬은 자동으로 처리되므로 순서는 신경 쓰지 않아도 됩니다.
-export const timelineEntries: TimelineEntry[] = [
-  {
-    year: 2022,
-    month: 3,
-    title: '프론트엔드 개발자로 첫 커리어 시작',
-    description:
-      'React와 TypeScript를 활용해 사내 서비스의 UI를 개발하며 프론트엔드 기초를 다졌습니다.',
-  },
-  {
-    year: 2023,
-    month: 6,
-    title: '주요 프로젝트 리드',
-    description:
-      '팀의 핵심 프로젝트를 주도하며 컴포넌트 설계와 성능 최적화 경험을 쌓았습니다.',
-  },
-  {
-    year: 2024,
-    month: 9,
-    title: '새로운 도전',
-    description:
-      '더 넓은 시야를 갖기 위해 새로운 팀에 합류하여 다양한 기술 스택을 경험했습니다.',
-  },
-  {
-    year: 2026,
-    month: 7,
-    title: '현재',
-    description: '지금도 계속 배우고 성장하며 새로운 프로젝트를 진행하고 있습니다.',
-    current: true,
-  },
-]
+// src/content/timeline/ 폴더에 .md 파일을 추가하면 자동으로 목록에 반영됩니다.
+// 파일 형식:
+// ---
+// year: 2025
+// month: 1
+// title: 제목
+// current: true   (선택, 진행 중인 항목에만 추가)
+// ---
+// 본문 내용 (마크다운)
+const rawFiles = import.meta.glob('../content/timeline/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
+
+function parseEntry(path: string, raw: string): TimelineEntry {
+  const match = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/)
+  if (!match) {
+    throw new Error(`${path}: frontmatter(---)가 없습니다.`)
+  }
+  const [, frontmatter, body] = match
+
+  const fields: Record<string, string> = {}
+  for (const line of frontmatter.split('\n')) {
+    const separatorIndex = line.indexOf(':')
+    if (separatorIndex === -1) continue
+    const key = line.slice(0, separatorIndex).trim()
+    const value = line
+      .slice(separatorIndex + 1)
+      .trim()
+      .replace(/^['"]|['"]$/g, '')
+    fields[key] = value
+  }
+
+  return {
+    year: Number(fields.year),
+    month: Number(fields.month),
+    title: fields.title ?? '',
+    current: fields.current === 'true',
+    description: body.trim(),
+  }
+}
+
+export const timelineEntries: TimelineEntry[] = Object.entries(rawFiles).map(
+  ([path, raw]) => parseEntry(path, raw),
+)
