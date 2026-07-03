@@ -1,14 +1,17 @@
 import Markdown from 'markdown-to-jsx'
-import { timelineEntries } from '../data/timeline'
+import { sortTimelineEntries, type TimelineEntry } from '../data/timelineEntry'
 
-function Timeline() {
-  const sortedEntries = [...timelineEntries].sort(
-    (a, b) => a.year - b.year || a.month - b.month,
-  )
+interface TimelineProps {
+  title: string
+  entries: TimelineEntry[]
+}
+
+function Timeline({ title, entries }: TimelineProps) {
+  const sortedEntries = sortTimelineEntries(entries)
 
   return (
     <section className="timeline-section">
-      <h2 className="timeline-heading">Career</h2>
+      <h2 className="timeline-heading">{title}</h2>
       <ol className="timeline">
         {sortedEntries.map((entry) => (
           <li className="timeline-item" key={`${entry.year}-${entry.month}-${entry.title}`}>

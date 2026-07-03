@@ -36,6 +36,10 @@
   line-height: 1.6;
 }
 
+.hero-bio p {
+  margin: 0;
+}
+
 .hero-scroll-cue {
   position: absolute;
   bottom: 32px;
