@@ -4,6 +4,8 @@ export interface TimelineEntry {
   year: number
   month: number
   title: string
+  org?: string
+  period?: string
   description: string
   current: boolean
 }
@@ -15,6 +17,8 @@ export function parseTimelineEntry(path: string, raw: string): TimelineEntry {
     year: Number(fields.year),
     month: Number(fields.month),
     title: fields.title ?? '',
+    org: fields.org,
+    period: fields.period,
     current: fields.current === 'true',
     description: body,
   }

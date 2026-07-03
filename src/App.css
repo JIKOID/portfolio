@@ -97,7 +97,7 @@
 
 .timeline-item {
   display: grid;
-  grid-template-columns: 110px 32px 1fr;
+  grid-template-columns: 130px 32px 1fr;
   column-gap: 24px;
   padding-bottom: 48px;
 }
@@ -124,6 +124,15 @@
   font-family: var(--mono);
   color: var(--text);
   font-size: 13px;
+}
+
+.timeline-period {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--text-h);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: right;
 }
 
 .timeline-marker {
@@ -164,6 +173,14 @@
   font-size: 18px;
   font-weight: 600;
   color: var(--text-h);
+  text-align: left;
+}
+
+.timeline-org {
+  margin: -2px 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
   text-align: left;
 }
 

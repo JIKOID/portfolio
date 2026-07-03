@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Private notes (not for the public repo)
+111퍼센트_업무정리.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

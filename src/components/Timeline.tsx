@@ -16,16 +16,23 @@ function Timeline({ title, entries }: TimelineProps) {
         {sortedEntries.map((entry) => (
           <li className="timeline-item" key={`${entry.year}-${entry.month}-${entry.title}`}>
             <div className="timeline-date">
-              <span className="timeline-year">{entry.year}</span>
-              <span className="timeline-month">
-                {String(entry.month).padStart(2, '0')}
-              </span>
+              {entry.period ? (
+                <span className="timeline-period">{entry.period}</span>
+              ) : (
+                <>
+                  <span className="timeline-year">{entry.year}</span>
+                  <span className="timeline-month">
+                    {String(entry.month).padStart(2, '0')}
+                  </span>
+                </>
+              )}
             </div>
             <div className="timeline-marker">
               <span className="timeline-dot" />
             </div>
             <div className="timeline-content">
               <h3>{entry.title}</h3>
+              {entry.org && <p className="timeline-org">{entry.org}</p>}
               <div className="timeline-description">
                 <Markdown>{entry.description}</Markdown>
               </div>
