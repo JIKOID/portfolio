@@ -13,6 +13,7 @@ interface TimelineProps {
   groupByCompany?: boolean
   companyMetas?: CompanyMeta[]
   detailInModal?: boolean
+  descending?: boolean
 }
 
 function roleOnly(org: string, company: string): string {
@@ -118,6 +119,7 @@ function Timeline({
   groupByCompany: shouldGroupByCompany,
   companyMetas,
   detailInModal,
+  descending,
 }: TimelineProps) {
   const [selected, setSelected] = useState<TimelineEntry | null>(null)
 
@@ -176,7 +178,10 @@ function Timeline({
         </ol>
       ) : (
         <ol className="timeline">
-          {sortTimelineEntries(entries).map((entry) => (
+          {(descending
+            ? sortTimelineEntries(entries).reverse()
+            : sortTimelineEntries(entries)
+          ).map((entry) => (
             <TimelineItem
               entry={entry}
               onSelect={detailInModal ? setSelected : undefined}

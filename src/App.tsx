@@ -16,7 +16,12 @@ function App() {
         companyMetas={companyMetas}
       />
       <Timeline title="Education" entries={educationEntries} />
-      <Timeline title="Certificates & Courses" entries={etcEntries} detailInModal />
+      <Timeline
+        title="Certificates & Courses"
+        entries={etcEntries}
+        detailInModal
+        descending
+      />
     </>
   )
 }

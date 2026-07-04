@@ -127,7 +127,12 @@
 /* 연혁형 타임라인: 메인 선에는 회사 노드만 놓고,
    업무 경력은 회사 콘텐츠 안의 보조 선(timeline-sub)으로 구분해 표시합니다. */
 .timeline--grouped .timeline-company {
+  grid-template-columns: 170px 32px 1fr;
   padding-bottom: 56px;
+}
+
+.timeline--grouped .timeline-company .timeline-period {
+  white-space: nowrap;
 }
 
 .timeline--grouped .timeline-company:last-child {
@@ -453,9 +458,13 @@
 }
 
 @media (max-width: 640px) {
-  .timeline-item {
+  .timeline-item,
+  .timeline--grouped .timeline-company {
     grid-template-columns: 24px 1fr;
     row-gap: 4px;
+  }
+
+  .timeline-item {
     padding-bottom: 40px;
   }
 
