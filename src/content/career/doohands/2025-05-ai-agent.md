@@ -3,6 +3,7 @@ year: 2025
 month: 5
 period: 2025.05 – 2025.09
 org: 두핸즈 · 데이터 엔지니어
+company: 두핸즈
 title: AI Agent 개발
 ---
 

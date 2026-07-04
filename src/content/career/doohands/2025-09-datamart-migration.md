@@ -3,6 +3,7 @@ year: 2025
 month: 9
 period: 2025.09 – 2025.11
 org: 두핸즈 · 데이터 엔지니어
+company: 두핸즈
 title: 데이터 마트 마이그레이션 (On-Premise to AWS RDS)
 ---
 

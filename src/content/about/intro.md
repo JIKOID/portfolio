@@ -2,6 +2,10 @@
 eyebrow: Hello, I'm
 name: 남 정 현
 role: Data Engineer
+linkedin: https://www.linkedin.com/in/jeonghyeon-nam-201a671a5/
+github: https://github.com/jaynamm
+blog1: https://jaynamm.tistory.com
+blog2: https://iavlog.tistory.com
 ---
 
 어제보다 더 나은 오늘을 만들어가는 데이터 엔지니어 남정현입니다 🧑🏻‍💻

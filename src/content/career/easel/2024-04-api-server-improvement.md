@@ -3,6 +3,7 @@ year: 2024
 month: 4
 period: 2024.04 – 2024.06
 org: (주)이젤 · 데이터 엔지니어
+company: (주)이젤
 title: 데이터 API 서버 고도화
 ---
 

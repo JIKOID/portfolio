@@ -3,6 +3,7 @@ year: 2023
 month: 9
 period: 2023.09 – 2024.08
 org: (주)이젤 · 데이터 엔지니어
+company: (주)이젤
 title: 데이터 파이프라인 구축·운영 및 Data Scraper 개발
 ---
 

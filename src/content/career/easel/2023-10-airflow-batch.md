@@ -3,6 +3,7 @@ year: 2023
 month: 10
 period: 2023.10 – 2024.08
 org: (주)이젤 · 데이터 엔지니어
+company: (주)이젤
 title: Apache Airflow 배치 스케줄러 운영
 ---
 

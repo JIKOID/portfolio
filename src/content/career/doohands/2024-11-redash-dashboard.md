@@ -3,6 +3,7 @@ year: 2024
 month: 11
 period: 2024.11 – 2024.12
 org: 두핸즈 · 데이터 엔지니어
+company: 두핸즈
 title: Redash 대시보드 구축
 ---
 

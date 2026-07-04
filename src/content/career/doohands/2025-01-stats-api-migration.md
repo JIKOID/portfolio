@@ -3,6 +3,7 @@ year: 2025
 month: 1
 period: 2025.01 – 2025.03
 org: 두핸즈 · 데이터 엔지니어
+company: 두핸즈
 title: 통계 서비스 API 서버 이관
 ---
 

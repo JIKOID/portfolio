@@ -3,6 +3,7 @@ year: 2022
 month: 8
 period: 2022.08 – 2022.11
 org: (주)키다리스튜디오 · 데이터 엔지니어
+company: (주)키다리스튜디오
 title: GCP to AWS 서비스 데이터 마이그레이션
 ---
 

@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Hero />
-      <Timeline title="Career" entries={careerEntries} />
+      <Timeline title="Career" entries={careerEntries} groupByCompany />
       <Timeline title="Education" entries={educationEntries} />
     </>
   )

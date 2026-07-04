@@ -3,6 +3,7 @@ year: 2024
 month: 12
 period: 2024.12
 org: 두핸즈 · 데이터 엔지니어
+company: 두핸즈
 title: 실시간 그라파나 대시보드 구축
 ---
 

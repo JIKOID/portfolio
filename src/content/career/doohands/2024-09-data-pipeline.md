@@ -3,6 +3,7 @@ year: 2024
 month: 9
 period: 2024.09 – 2024.11
 org: 두핸즈 · 데이터 엔지니어
+company: 두핸즈
 title: 데이터 파이프라인 구축
 ---
 

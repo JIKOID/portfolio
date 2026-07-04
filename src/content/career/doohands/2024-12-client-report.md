@@ -3,6 +3,7 @@ year: 2024
 month: 12
 period: 2024.12 – 2025.01
 org: 두핸즈 · 데이터 엔지니어
+company: 두핸즈
 title: 고객사 리포트
 ---
 
