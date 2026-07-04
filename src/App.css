@@ -107,7 +107,7 @@
 }
 
 .timeline-section {
-  max-width: 860px;
+  max-width: 980px;
   margin: 0 auto;
   padding: 96px 24px 160px;
   box-sizing: border-box;
@@ -118,87 +118,109 @@
   margin-bottom: 64px;
 }
 
-.timeline {
+/* 하나의 중앙선 그래프: 업무 경력(회사)은 오른쪽,
+   학력·자격증 등(side)은 왼쪽에 배치해 전체 흐름을 한눈에 보여줍니다. */
+.flow-timeline {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* 연혁형 타임라인: 메인 선에는 회사 노드만 놓고,
-   업무 경력은 회사 콘텐츠 안의 보조 선(timeline-sub)으로 구분해 표시합니다. */
-.timeline--grouped .timeline-company {
-  grid-template-columns: 170px 32px 1fr;
-  padding-bottom: 56px;
+.flow-item {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) 32px minmax(0, 3fr);
+  column-gap: 24px;
+  padding-bottom: 48px;
 }
 
-.timeline--grouped .timeline-company .timeline-period {
-  white-space: nowrap;
-}
-
-.timeline--grouped .timeline-company:last-child {
+.flow-item:last-child {
   padding-bottom: 0;
 }
 
-.timeline--grouped .timeline-marker::before {
-  bottom: -56px;
+.flow-side {
+  min-width: 0;
+  grid-row: 1;
 }
 
-.timeline--grouped .timeline-company:last-child .timeline-marker::before {
-  bottom: 0;
-  height: auto;
+.flow-side--left {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
 }
 
-.timeline-sub {
-  list-style: none;
-  margin: 20px 0 0;
-  padding: 0;
+.flow-item .timeline-marker {
+  grid-column: 2;
+  grid-row: 1;
 }
 
-.timeline-sub-item {
-  position: relative;
-  margin-left: 4px;
-  padding: 0 0 20px 22px;
-  border-left: 2px solid var(--border);
-}
-
-.timeline-sub-item:last-child {
-  padding-bottom: 0;
-}
-
-.timeline-sub-item::before {
-  content: '';
-  position: absolute;
-  left: -6px;
-  top: 5px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--bg);
-  border: 2px solid var(--accent-border);
-}
-
-.timeline-sub-date {
-  display: block;
-  margin-bottom: 2px;
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--accent);
+.flow-side--right {
+  grid-column: 3;
   text-align: left;
 }
 
-.timeline-sub-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 12px;
+.flow-date {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
 }
 
-.timeline-sub-title {
+.flow-side-title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: var(--text-h);
+}
+
+.flow-side-org {
+  margin: 2px 0 8px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+/* 회사 안에서 진행한 프로젝트: 가로로 흐르는 카드 목록 */
+.project-row {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.project-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: none;
+  font-family: inherit;
   text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.project-chip:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.project-chip-date {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.project-chip-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
 }
 
 .timeline-company-role {
@@ -228,13 +250,6 @@
   width: 16px;
   height: 16px;
   top: 2px;
-}
-
-.timeline-duration {
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--text);
-  text-align: right;
 }
 
 .timeline-detail-button {
@@ -326,46 +341,6 @@
   font-size: 15px;
 }
 
-.timeline-item {
-  display: grid;
-  grid-template-columns: 130px 32px 1fr;
-  column-gap: 24px;
-  padding-bottom: 48px;
-}
-
-.timeline-item:last-child {
-  padding-bottom: 0;
-}
-
-.timeline-date {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding-top: 2px;
-}
-
-.timeline-year {
-  font-family: var(--mono);
-  font-weight: 600;
-  color: var(--text-h);
-  font-size: 16px;
-}
-
-.timeline-month {
-  font-family: var(--mono);
-  color: var(--text);
-  font-size: 13px;
-}
-
-.timeline-period {
-  font-family: var(--mono);
-  font-weight: 600;
-  color: var(--text-h);
-  font-size: 14px;
-  line-height: 1.4;
-  text-align: right;
-}
-
 .timeline-marker {
   position: relative;
   display: flex;
@@ -383,7 +358,7 @@
   transform: translateX(-50%);
 }
 
-.timeline-item:last-child .timeline-marker::before {
+.flow-item:last-child .timeline-marker::before {
   bottom: auto;
   height: 12px;
 }
@@ -397,22 +372,6 @@
   background: var(--accent);
   box-shadow: 0 0 0 4px var(--accent-bg);
   z-index: 1;
-}
-
-.timeline-content h3 {
-  margin: 0 0 8px;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-h);
-  text-align: left;
-}
-
-.timeline-org {
-  margin: -2px 0 10px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--accent);
-  text-align: left;
 }
 
 .timeline-description {
@@ -457,34 +416,22 @@
   font-weight: 600;
 }
 
+/* 모바일: 중앙선 그래프를 한쪽으로 접어 모든 항목을 오른쪽에 표시합니다. */
 @media (max-width: 640px) {
-  .timeline-item,
-  .timeline--grouped .timeline-company {
+  .flow-item {
     grid-template-columns: 24px 1fr;
-    row-gap: 4px;
-  }
-
-  .timeline-item {
     padding-bottom: 40px;
   }
 
-  .timeline-date {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 6px;
-    padding-top: 0;
-  }
-
-  .timeline-marker {
+  .flow-item .timeline-marker {
     grid-column: 1;
-    grid-row: 2;
   }
 
-  .timeline-content {
+  .flow-side--left,
+  .flow-side--right {
     grid-column: 2;
-    grid-row: 2;
+    align-items: flex-start;
+    text-align: left;
   }
 
   .timeline-marker::before {

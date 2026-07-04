@@ -10,17 +10,10 @@ function App() {
     <>
       <Hero />
       <Timeline
-        title="Career"
-        entries={careerEntries}
-        groupByCompany
+        title="Journey"
+        career={careerEntries}
         companyMetas={companyMetas}
-      />
-      <Timeline title="Education" entries={educationEntries} />
-      <Timeline
-        title="Certificates & Courses"
-        entries={etcEntries}
-        detailInModal
-        descending
+        side={[...educationEntries, ...etcEntries]}
       />
     </>
   )

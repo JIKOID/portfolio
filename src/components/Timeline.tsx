@@ -2,18 +2,16 @@ import { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 import {
   groupByCompany,
-  sortTimelineEntries,
+  type CompanyGroup,
   type CompanyMeta,
   type TimelineEntry,
 } from '../data/timelineEntry'
 
 interface TimelineProps {
   title: string
-  entries: TimelineEntry[]
-  groupByCompany?: boolean
+  career: TimelineEntry[]
   companyMetas?: CompanyMeta[]
-  detailInModal?: boolean
-  descending?: boolean
+  side: TimelineEntry[]
 }
 
 function roleOnly(org: string, company: string): string {
@@ -25,56 +23,17 @@ function entryDateLabel(entry: TimelineEntry): string {
   return entry.period ?? `${entry.year}.${String(entry.month).padStart(2, '0')}`
 }
 
-interface TimelineItemProps {
-  entry: TimelineEntry
-  company?: string
-  onSelect?: (entry: TimelineEntry) => void
-}
+// 회사(업무 경력)는 오른쪽, 학력·자격증 등(side)은 왼쪽에 배치해
+// 하나의 중앙선 위에서 전체 흐름을 시간 내림차순으로 보여줍니다.
+type FlowItem =
+  | { kind: 'company'; group: CompanyGroup; key: string; sortKey: number }
+  | { kind: 'side'; entry: TimelineEntry; key: string; sortKey: number }
 
-// onSelect가 있으면 제목만 보여주는 컴팩트 모드로 렌더링하고,
-// 상세 내용은 "자세히 보기" 버튼을 통해 모달로 보여줍니다.
-function TimelineItem({ entry, company, onSelect }: TimelineItemProps) {
-  const orgLabel = entry.org && company ? roleOnly(entry.org, company) : entry.org
-
-  return (
-    <li className="timeline-item">
-      <div className="timeline-date">
-        {entry.period ? (
-          <span className="timeline-period">{entry.period}</span>
-        ) : (
-          <>
-            <span className="timeline-year">{entry.year}</span>
-            <span className="timeline-month">{String(entry.month).padStart(2, '0')}</span>
-          </>
-        )}
-      </div>
-      <div className="timeline-marker">
-        <span className="timeline-dot" />
-      </div>
-      <div className="timeline-content">
-        <h3>{entry.title}</h3>
-        {orgLabel && <p className="timeline-org">{orgLabel}</p>}
-        {onSelect ? (
-          entry.description && (
-            <button
-              type="button"
-              className="timeline-detail-button"
-              onClick={() => onSelect(entry)}
-            >
-              자세히 보기
-            </button>
-          )
-        ) : (
-          <>
-            <div className="timeline-description">
-              <Markdown>{entry.description}</Markdown>
-            </div>
-            {entry.current && <span className="timeline-badge">현재</span>}
-          </>
-        )}
-      </div>
-    </li>
-  )
+function companyStartKey(group: CompanyGroup): number {
+  const match = group.period?.match(/(\d{4})\.(\d{1,2})/)
+  if (match) return Number(match[1]) * 12 + Number(match[2])
+  const first = group.entries[0]
+  return first ? first.year * 12 + first.month : 0
 }
 
 function DetailModal({ entry, onClose }: { entry: TimelineEntry; onClose: () => void }) {
@@ -113,83 +72,97 @@ function DetailModal({ entry, onClose }: { entry: TimelineEntry; onClose: () => 
   )
 }
 
-function Timeline({
-  title,
-  entries,
-  groupByCompany: shouldGroupByCompany,
-  companyMetas,
-  detailInModal,
-  descending,
-}: TimelineProps) {
+function Timeline({ title, career, companyMetas, side }: TimelineProps) {
   const [selected, setSelected] = useState<TimelineEntry | null>(null)
+
+  const items: FlowItem[] = [
+    ...groupByCompany(career, companyMetas).map((group) => ({
+      kind: 'company' as const,
+      group,
+      key: `company-${group.company}`,
+      sortKey: companyStartKey(group),
+    })),
+    ...side.map((entry) => ({
+      kind: 'side' as const,
+      entry,
+      key: `side-${entry.year}-${entry.month}-${entry.title}`,
+      sortKey: entry.year * 12 + entry.month,
+    })),
+  ].sort((a, b) => b.sortKey - a.sortKey)
 
   return (
     <section className="timeline-section">
       <h2 className="timeline-heading">{title}</h2>
-      {shouldGroupByCompany ? (
-        <ol className="timeline timeline--grouped">
-          {groupByCompany(entries, companyMetas).map((group) => {
-            const firstOrg = group.entries[0]?.org
-            const role = firstOrg ? roleOnly(firstOrg, group.company) : undefined
+      <ol className="flow-timeline">
+        {items.map((item) => {
+          const firstOrg = item.kind === 'company' ? item.group.entries[0]?.org : undefined
+          const role =
+            item.kind === 'company' && firstOrg
+              ? roleOnly(firstOrg, item.group.company)
+              : undefined
 
-            return (
-              <li className="timeline-item timeline-company" key={group.company}>
-                <div className="timeline-date">
-                  {group.period && <span className="timeline-period">{group.period}</span>}
-                  {group.duration && (
-                    <span className="timeline-duration">{group.duration}</span>
-                  )}
-                </div>
-                <div className="timeline-marker">
-                  <span className="timeline-dot timeline-company-dot" />
-                </div>
-                <div className="timeline-content">
-                  <div className="timeline-company-row">
-                    <h3 className="timeline-company-name">{group.company}</h3>
-                    {role && <span className="timeline-company-role">{role}</span>}
-                    {group.current && <span className="timeline-badge">현재</span>}
-                  </div>
-                  <ol className="timeline-sub">
-                    {group.entries.map((entry) => (
-                      <li
-                        className="timeline-sub-item"
-                        key={`${entry.year}-${entry.month}-${entry.title}`}
+          return (
+            <li className="flow-item" key={item.key}>
+              <div className="flow-side flow-side--left">
+                {item.kind === 'side' && (
+                  <>
+                    <span className="flow-date">{entryDateLabel(item.entry)}</span>
+                    <h3 className="flow-side-title">{item.entry.title}</h3>
+                    {item.entry.org && <p className="flow-side-org">{item.entry.org}</p>}
+                    {item.entry.description && (
+                      <button
+                        type="button"
+                        className="timeline-detail-button"
+                        onClick={() => setSelected(item.entry)}
                       >
-                        <span className="timeline-sub-date">{entryDateLabel(entry)}</span>
-                        <div className="timeline-sub-row">
-                          <h4 className="timeline-sub-title">{entry.title}</h4>
-                          {entry.description && (
-                            <button
-                              type="button"
-                              className="timeline-detail-button"
-                              onClick={() => setSelected(entry)}
-                            >
-                              자세히 보기
-                            </button>
-                          )}
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </li>
-            )
-          })}
-        </ol>
-      ) : (
-        <ol className="timeline">
-          {(descending
-            ? sortTimelineEntries(entries).reverse()
-            : sortTimelineEntries(entries)
-          ).map((entry) => (
-            <TimelineItem
-              entry={entry}
-              onSelect={detailInModal ? setSelected : undefined}
-              key={`${entry.year}-${entry.month}-${entry.title}`}
-            />
-          ))}
-        </ol>
-      )}
+                        자세히 보기
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+              <div className="timeline-marker">
+                <span
+                  className={
+                    item.kind === 'company'
+                      ? 'timeline-dot timeline-company-dot'
+                      : 'timeline-dot'
+                  }
+                />
+              </div>
+              <div className="flow-side flow-side--right">
+                {item.kind === 'company' && (
+                  <>
+                    <span className="flow-date">
+                      {item.group.period}
+                      {item.group.duration && ` · ${item.group.duration}`}
+                    </span>
+                    <div className="timeline-company-row">
+                      <h3 className="timeline-company-name">{item.group.company}</h3>
+                      {role && <span className="timeline-company-role">{role}</span>}
+                      {item.group.current && <span className="timeline-badge">현재</span>}
+                    </div>
+                    <ul className="project-row">
+                      {item.group.entries.map((entry) => (
+                        <li key={`${entry.year}-${entry.month}-${entry.title}`}>
+                          <button
+                            type="button"
+                            className="project-chip"
+                            onClick={() => setSelected(entry)}
+                          >
+                            <span className="project-chip-date">{entryDateLabel(entry)}</span>
+                            <span className="project-chip-title">{entry.title}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            </li>
+          )
+        })}
+      </ol>
       {selected && <DetailModal entry={selected} onClose={() => setSelected(null)} />}
     </section>
   )
