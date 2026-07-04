@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 import {
   groupByCompany,
@@ -126,9 +126,12 @@ function Timeline({
       <h2 className="timeline-heading">{title}</h2>
       {shouldGroupByCompany ? (
         <ol className="timeline timeline--grouped">
-          {groupByCompany(entries, companyMetas).map((group) => (
-            <Fragment key={group.company}>
-              <li className="timeline-item timeline-company">
+          {groupByCompany(entries, companyMetas).map((group) => {
+            const firstOrg = group.entries[0]?.org
+            const role = firstOrg ? roleOnly(firstOrg, group.company) : undefined
+
+            return (
+              <li className="timeline-item timeline-company" key={group.company}>
                 <div className="timeline-date">
                   {group.period && <span className="timeline-period">{group.period}</span>}
                   {group.duration && (
@@ -141,20 +144,35 @@ function Timeline({
                 <div className="timeline-content">
                   <div className="timeline-company-row">
                     <h3 className="timeline-company-name">{group.company}</h3>
+                    {role && <span className="timeline-company-role">{role}</span>}
                     {group.current && <span className="timeline-badge">현재</span>}
                   </div>
+                  <ol className="timeline-sub">
+                    {group.entries.map((entry) => (
+                      <li
+                        className="timeline-sub-item"
+                        key={`${entry.year}-${entry.month}-${entry.title}`}
+                      >
+                        <span className="timeline-sub-date">{entryDateLabel(entry)}</span>
+                        <div className="timeline-sub-row">
+                          <h4 className="timeline-sub-title">{entry.title}</h4>
+                          {entry.description && (
+                            <button
+                              type="button"
+                              className="timeline-detail-button"
+                              onClick={() => setSelected(entry)}
+                            >
+                              자세히 보기
+                            </button>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
               </li>
-              {group.entries.map((entry) => (
-                <TimelineItem
-                  entry={entry}
-                  company={group.company}
-                  onSelect={setSelected}
-                  key={`${entry.year}-${entry.month}-${entry.title}`}
-                />
-              ))}
-            </Fragment>
-          ))}
+            )
+          })}
         </ol>
       ) : (
         <ol className="timeline">

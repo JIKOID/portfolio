@@ -124,31 +124,81 @@
   padding: 0;
 }
 
-/* 회사(대분류) 노드가 섞인 연혁형 타임라인: 항목 간격을 좁혀 흐름을 한눈에 보여줍니다. */
-.timeline--grouped .timeline-item {
-  padding-bottom: 28px;
+/* 연혁형 타임라인: 메인 선에는 회사 노드만 놓고,
+   업무 경력은 회사 콘텐츠 안의 보조 선(timeline-sub)으로 구분해 표시합니다. */
+.timeline--grouped .timeline-company {
+  padding-bottom: 56px;
 }
 
-.timeline--grouped .timeline-item:last-child {
+.timeline--grouped .timeline-company:last-child {
   padding-bottom: 0;
 }
 
 .timeline--grouped .timeline-marker::before {
-  bottom: -80px;
+  bottom: -56px;
 }
 
-.timeline--grouped .timeline-item:last-child .timeline-marker::before {
-  bottom: auto;
-  height: 12px;
+.timeline--grouped .timeline-company:last-child .timeline-marker::before {
+  bottom: 0;
+  height: auto;
 }
 
-.timeline--grouped .timeline-company {
-  padding-top: 28px;
-  padding-bottom: 24px;
+.timeline-sub {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
 }
 
-.timeline--grouped .timeline-company:first-child {
-  padding-top: 0;
+.timeline-sub-item {
+  position: relative;
+  margin-left: 4px;
+  padding: 0 0 20px 22px;
+  border-left: 2px solid var(--border);
+}
+
+.timeline-sub-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-sub-item::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent-border);
+}
+
+.timeline-sub-date {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+  text-align: left;
+}
+
+.timeline-sub-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.timeline-sub-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-h);
+  text-align: left;
+}
+
+.timeline-company-role {
+  font-size: 14px;
+  color: var(--text);
 }
 
 .timeline-company-row {
