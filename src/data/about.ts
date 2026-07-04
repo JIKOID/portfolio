@@ -30,8 +30,8 @@ const { fields, body } = parseFrontmatter(path, raw)
 const linkFields: Array<[label: string, key: string]> = [
   ['LinkedIn', 'linkedin'],
   ['GitHub', 'github'],
-  ['Blog (New)', 'blog1'],
-  ['Blog (Old)', 'blog2'],
+  ['Blog (Old)', 'blog1'],
+  ['Blog (New)', 'blog2'],
 ]
 
 export const about: About = {
