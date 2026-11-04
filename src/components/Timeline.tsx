@@ -1,169 +1,163 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import Markdown from 'markdown-to-jsx'
-import {
-  groupByCompany,
-  type CompanyGroup,
-  type CompanyMeta,
-  type TimelineEntry,
-} from '../data/timelineEntry'
+import { groupByCompany, type CompanyGroup, type CompanyMeta, type TimelineEntry } from '../data/timelineEntry'
+import './Timeline.css'
 
 interface TimelineProps {
   title: string
   career: TimelineEntry[]
   companyMetas?: CompanyMeta[]
-  side: TimelineEntry[]
+  graduation: TimelineEntry[]
 }
 
-function roleOnly(org: string, company: string): string {
-  const prefix = `${company} · `
-  return org.startsWith(prefix) ? org.slice(prefix.length) : org
+type Stage = {
+  key: string
+  date: string
+  sortKey: number
+  title: string
+  role: string
+  appointment?: string
+  period: string
+  summary: string
+  current: boolean
+  kind: 'career' | 'graduation'
 }
 
-function entryDateLabel(entry: TimelineEntry): string {
-  return entry.period ?? `${entry.year}.${String(entry.month).padStart(2, '0')}`
+function entryDate(entry: TimelineEntry) {
+  return `${entry.year}.${String(entry.month).padStart(2, '0')}`
 }
 
-// 회사(업무 경력)는 오른쪽, 학력·자격증 등(side)은 왼쪽에 배치해
-// 하나의 중앙선 위에서 전체 흐름을 시간 내림차순으로 보여줍니다.
-type FlowItem =
-  | { kind: 'company'; group: CompanyGroup; key: string; sortKey: number }
-  | { kind: 'side'; entry: TimelineEntry; key: string; sortKey: number }
-
-function companyStartKey(group: CompanyGroup): number {
-  const match = group.period?.match(/(\d{4})\.(\d{1,2})/)
-  if (match) return Number(match[1]) * 12 + Number(match[2])
-  const first = group.entries[0]
-  return first ? first.year * 12 + first.month : 0
+function companyDate(group: CompanyGroup) {
+  return group.period?.match(/\d{4}\.\d{2}/)?.[0] ?? entryDate(group.entries[0])
 }
 
-function DetailModal({ entry, onClose }: { entry: TimelineEntry; onClose: () => void }) {
+function Timeline({ title, career, companyMetas, graduation }: TimelineProps) {
+  const sectionRef = useRef<HTMLElement>(null)
+  const frameRef = useRef<HTMLDivElement>(null)
+  const railRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLOListElement>(null)
+  const detailRef = useRef<HTMLElement>(null)
+  const [progress, setProgress] = useState(0)
+
+  const stages = useMemo<Stage[]>(() => [
+    ...groupByCompany(career, companyMetas).map((group) => {
+      const date = companyDate(group)
+      const org = group.entries[0]?.org ?? ''
+      return {
+        key: `company-${group.company}`,
+        date,
+        sortKey: Number(date.replace('.', '')),
+        title: group.company.replace(/^\(주\)|^주식회사/, ''),
+        role: org.replace(`${group.company} · `, '').replace(/\s*\([^)]*\)$/, ''),
+        appointment: [group.employment, group.position].filter(Boolean).join(' · '),
+        period: [group.period, group.duration].filter(Boolean).join(' · '),
+        summary: group.summary || group.entries[0].description,
+        current: group.current,
+        kind: 'career' as const,
+      }
+    }),
+    ...graduation.map((entry) => ({
+      key: `graduation-${entryDate(entry)}`,
+      date: entryDate(entry),
+      sortKey: entry.year * 100 + entry.month,
+      title: entry.title,
+      role: entry.org ?? '대학교 졸업',
+      period: entryDate(entry),
+      summary: entry.description,
+      current: false,
+      kind: 'graduation' as const,
+    })),
+  ].sort((a, b) => a.sortKey - b.sortKey), [career, companyMetas, graduation])
+
+  const activeIndex = Math.min(stages.length - 1, Math.floor(progress * stages.length))
+  const active = stages[activeIndex]
+
   useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
+    const section = sectionRef.current
+    const frame = frameRef.current
+    if (!section || !frame) return
+    let request = 0
+    const update = () => {
+      request = 0
+      const travel = section.offsetHeight - frame.offsetHeight
+      const next = travel > 0 ? -section.getBoundingClientRect().top / travel : 0
+      setProgress(Math.max(0, Math.min(1, next)))
     }
-    window.addEventListener('keydown', onKeyDown)
-    document.body.style.overflow = 'hidden'
+    const schedule = () => { if (!request) request = requestAnimationFrame(update) }
+    const observer = new ResizeObserver(schedule)
+    observer.observe(section)
+    observer.observe(frame)
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    update()
     return () => {
-      window.removeEventListener('keydown', onKeyDown)
-      document.body.style.overflow = ''
+      cancelAnimationFrame(request)
+      observer.disconnect()
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
     }
-  }, [onClose])
+  }, [])
+
+  useEffect(() => {
+    const rail = railRef.current
+    const track = trackRef.current
+    if (!rail || !track || !stages.length) return
+    const stageWidth = track.scrollWidth / stages.length
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const position = reducedMotion ? activeIndex : Math.min(progress * stages.length, stages.length - 1)
+    const offset = Math.max(0, Math.min(position * stageWidth - rail.clientWidth / 2 + stageWidth / 2, track.scrollWidth - rail.clientWidth))
+    track.style.transform = `translateX(${-offset}px)`
+  }, [progress, activeIndex, stages.length])
+
+  useEffect(() => { detailRef.current?.scrollTo({ top: 0, behavior: 'instant' }) }, [activeIndex])
+
+  if (!active) return null
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="presentation">
-      <div
-        className="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-label={entry.title}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button type="button" className="modal-close" onClick={onClose} aria-label="닫기">
-          ×
-        </button>
-        <p className="modal-period">{entryDateLabel(entry)}</p>
-        <h3 className="modal-title">{entry.title}</h3>
-        {entry.org && <p className="modal-org">{entry.org}</p>}
-        <div className="timeline-description modal-body">
-          <Markdown>{entry.description}</Markdown>
+    <section className="pipeline-section" id="journey" ref={sectionRef} style={{ '--stage-count': stages.length } as CSSProperties} aria-labelledby="journey-title" tabIndex={-1}>
+      <div className="pipeline-frame" ref={frameRef}>
+        <div className="pipeline-inner">
+          <header className="pipeline-header">
+            <div>
+              <p className="section-eyebrow">03 / CAREER JOURNEY</p>
+              <h2 id="journey-title">{title}</h2>
+            </div>
+            <p className="pipeline-guide">아래로 스크롤하면<br />다음 경험으로 이어집니다.</p>
+          </header>
+
+          <div className="pipeline-rail" ref={railRef} aria-label="졸업과 회사 이력을 시간 순서로 연결한 커리어">
+            <ol className="pipeline-track" ref={trackRef} style={{ '--line-progress': stages.length > 1 ? Math.min(progress * stages.length / (stages.length - 1), 1) : 0 } as CSSProperties}>
+              {stages.map((stage, index) => (
+                <li className={`pipeline-stage ${index < activeIndex ? 'is-complete' : ''} ${index === activeIndex ? 'is-active' : ''}`} key={stage.key} aria-current={index === activeIndex ? 'step' : undefined}>
+                  <div className="pipeline-stage-label">
+                    <span className="pipeline-date">{stage.date}</span>
+                    <span className="pipeline-node" aria-hidden="true" />
+                    <span className="pipeline-stage-title">{stage.title}</span>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <article className="pipeline-detail" ref={detailRef} tabIndex={0} aria-label={`${active.title} 경력 상세`}>
+            <div className="pipeline-detail-content" key={active.key}>
+              <div className="pipeline-company">
+                <p className="pipeline-kind">{active.kind === 'career' ? 'CAREER' : 'GRADUATION'}{active.current && <span>현재</span>}</p>
+                <h3>{active.title}</h3>
+                <p className="pipeline-role">{active.role}</p>
+                {active.appointment && <p className="pipeline-appointment">{active.appointment}</p>}
+                <p className="pipeline-period">{active.period}</p>
+              </div>
+              <div className="pipeline-summary"><Markdown>{active.summary}</Markdown></div>
+            </div>
+          </article>
+
+          <footer className="pipeline-footer">
+            <span className="pipeline-position" aria-live="polite" aria-atomic="true">{String(activeIndex + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}</span>
+            <a className="about-next" href="#projects">프로젝트 구성도 보기 <span aria-hidden="true">↓</span></a>
+          </footer>
         </div>
       </div>
-    </div>
-  )
-}
-
-function Timeline({ title, career, companyMetas, side }: TimelineProps) {
-  const [selected, setSelected] = useState<TimelineEntry | null>(null)
-
-  const items: FlowItem[] = [
-    ...groupByCompany(career, companyMetas).map((group) => ({
-      kind: 'company' as const,
-      group,
-      key: `company-${group.company}`,
-      sortKey: companyStartKey(group),
-    })),
-    ...side.map((entry) => ({
-      kind: 'side' as const,
-      entry,
-      key: `side-${entry.year}-${entry.month}-${entry.title}`,
-      sortKey: entry.year * 12 + entry.month,
-    })),
-  ].sort((a, b) => b.sortKey - a.sortKey)
-
-  return (
-    <section className="timeline-section">
-      <h2 className="timeline-heading">{title}</h2>
-      <ol className="flow-timeline">
-        {items.map((item) => {
-          const firstOrg = item.kind === 'company' ? item.group.entries[0]?.org : undefined
-          const role =
-            item.kind === 'company' && firstOrg
-              ? roleOnly(firstOrg, item.group.company)
-              : undefined
-
-          return (
-            <li className="flow-item" key={item.key}>
-              <div className="flow-side flow-side--left">
-                {item.kind === 'side' && (
-                  <>
-                    <span className="flow-date">{entryDateLabel(item.entry)}</span>
-                    <h3 className="flow-side-title">{item.entry.title}</h3>
-                    {item.entry.org && <p className="flow-side-org">{item.entry.org}</p>}
-                    {item.entry.description && (
-                      <button
-                        type="button"
-                        className="timeline-detail-button"
-                        onClick={() => setSelected(item.entry)}
-                      >
-                        자세히 보기
-                      </button>
-                    )}
-                  </>
-                )}
-              </div>
-              <div className="timeline-marker">
-                <span
-                  className={
-                    item.kind === 'company'
-                      ? 'timeline-dot timeline-company-dot'
-                      : 'timeline-dot'
-                  }
-                />
-              </div>
-              <div className="flow-side flow-side--right">
-                {item.kind === 'company' && (
-                  <>
-                    <span className="flow-date">
-                      {item.group.period}
-                      {item.group.duration && ` · ${item.group.duration}`}
-                    </span>
-                    <div className="timeline-company-row">
-                      <h3 className="timeline-company-name">{item.group.company}</h3>
-                      {role && <span className="timeline-company-role">{role}</span>}
-                      {item.group.current && <span className="timeline-badge">현재</span>}
-                    </div>
-                    <ul className="project-row">
-                      {item.group.entries.map((entry) => (
-                        <li key={`${entry.year}-${entry.month}-${entry.title}`}>
-                          <button
-                            type="button"
-                            className="project-chip"
-                            onClick={() => setSelected(entry)}
-                          >
-                            <span className="project-chip-date">{entryDateLabel(entry)}</span>
-                            <span className="project-chip-title">{entry.title}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </div>
-            </li>
-          )
-        })}
-      </ol>
-      {selected && <DetailModal entry={selected} onClose={() => setSelected(null)} />}
     </section>
   )
 }

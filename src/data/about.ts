@@ -3,6 +3,8 @@ import { parseFrontmatter } from './frontmatter'
 export interface AboutLink {
   label: string
   url: string
+  description: string
+  mark: string
 }
 
 export interface About {
@@ -10,6 +12,8 @@ export interface About {
   name: string
   role: string
   bio: string
+  email?: string
+  skills: { label: string; items: string[] }[]
   links: AboutLink[]
 }
 
@@ -27,11 +31,11 @@ if (!path || !raw) {
 
 const { fields, body } = parseFrontmatter(path, raw)
 
-const linkFields: Array<[label: string, key: string]> = [
-  ['LinkedIn', 'linkedin'],
-  ['GitHub', 'github'],
-  ['Blog (Old)', 'blog1'],
-  ['Blog (New)', 'blog2'],
+const linkFields: Array<[label: string, key: string, description: string, mark: string]> = [
+  ['LinkedIn', 'linkedin', '경력과 활동, 그리고 새로운 연결', 'in'],
+  ['GitHub', 'github', '코드와 프로젝트 살펴보기', '{ }'],
+  ['Blog (New)', 'blog2', '새롭게 이어가는 학습과 기술 기록', 'B'],
+  ['Blog (Old)', 'blog1', '차곡차곡 쌓아온 이전의 기록', 'B'],
 ]
 
 export const about: About = {
@@ -39,7 +43,13 @@ export const about: About = {
   name: fields.name ?? '',
   role: fields.role ?? '',
   bio: body,
+  email: fields.email,
+  skills: [
+    { label: '데이터 처리·플랫폼', key: 'skills-data' },
+    { label: '인프라·운영', key: 'skills-platform' },
+    { label: 'AI·데이터 서비스', key: 'skills-ai' },
+  ].map(({ label, key }) => ({ label, items: (fields[key] ?? '').split('|').map((item) => item.trim()).filter(Boolean) })),
   links: linkFields
     .filter(([, key]) => fields[key])
-    .map(([label, key]) => ({ label, url: fields[key] })),
+    .map(([label, key, description, mark]) => ({ label, url: fields[key], description, mark })),
 }

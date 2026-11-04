@@ -34,16 +34,22 @@ export function sortTimelineEntries(entries: TimelineEntry[]): TimelineEntry[] {
 export interface CompanyMeta {
   company: string
   period?: string
+  employment?: string
+  position?: string
+  summary?: string
 }
 
 export function parseCompanyMeta(path: string, raw: string): CompanyMeta {
-  const { fields } = parseFrontmatter(path, raw)
+  const { fields, body } = parseFrontmatter(path, raw)
   if (!fields.company) {
     throw new Error(`${path}: company 필드가 없습니다.`)
   }
   return {
     company: fields.company,
     period: fields.period,
+    employment: fields.employment,
+    position: fields.position,
+    summary: body,
   }
 }
 
@@ -75,6 +81,9 @@ export interface CompanyGroup {
   current: boolean
   period?: string
   duration?: string
+  employment?: string
+  position?: string
+  summary?: string
   latestYear: number
   latestMonth: number
 }
@@ -101,13 +110,17 @@ export function groupByCompany(
 
   const result: CompanyGroup[] = Array.from(groups.entries()).map(([company, groupEntries]) => {
     const latest = groupEntries[groupEntries.length - 1]
-    const period = metaByCompany.get(company)?.period
+    const meta = metaByCompany.get(company)
+    const period = meta?.period
     return {
       company,
       entries: groupEntries,
       current: groupEntries.some((entry) => entry.current),
       period,
       duration: period ? formatPeriodDuration(period) : undefined,
+      employment: meta?.employment,
+      position: meta?.position,
+      summary: meta?.summary,
       latestYear: latest.year,
       latestMonth: latest.month,
     }

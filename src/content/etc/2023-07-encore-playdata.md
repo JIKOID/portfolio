@@ -20,3 +20,7 @@ title: 빅데이터 기반 지능형 SW 및 MLOps 개발자 양성 과정
 - Github 기반 버전 관리 정책 수립 (Fork 후 PR·Merge 방식)
 - React + Spring Boot 웹 사이트 개발, AWS EC2 배포
 - FastAPI 추천 시스템 API 서버 구축, 채용 공고 크롤링·전처리 후 컨텐츠 기반 필터링 추천 시스템 구현
+
+### 추가 수행 내용
+- Spring Boot·React 기반 웹 프로젝트에서 로그인·로그아웃·회원가입 등 회원 정보 백엔드 담당
+- 파이널 프로젝트의 React·Spring Boot·MySQL을 AWS EC2에 Git 기반으로 배포

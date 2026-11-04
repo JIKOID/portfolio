@@ -1,0 +1,292 @@
+.section-eyebrow {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.pipeline-section {
+  --pipeline-paper: #f2f5ee;
+  height: calc(100svh + var(--stage-count) * 68svh);
+  position: relative;
+  background: var(--pipeline-paper);
+}
+
+.pipeline-frame {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  padding: clamp(24px, 5svh, 48px) clamp(24px, 5vw, 88px) 24px;
+  box-sizing: border-box;
+  background: var(--pipeline-paper);
+}
+
+.pipeline-inner {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 28px;
+  height: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.pipeline-header,
+.pipeline-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.pipeline-header h2 {
+  margin: 0;
+  font-size: clamp(24px, 2.6vw, 36px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1.4;
+}
+
+.pipeline-guide {
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: right;
+}
+
+.pipeline-rail {
+  overflow: hidden;
+  padding: 6px 0;
+}
+
+.pipeline-track {
+  position: relative;
+  display: flex;
+  width: max-content;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  will-change: transform;
+}
+
+.pipeline-track::before,
+.pipeline-track::after {
+  content: '';
+  position: absolute;
+  top: 42px;
+  left: 95px;
+  width: calc(100% - 190px);
+  height: 2px;
+  background: var(--border);
+}
+
+.pipeline-track::after {
+  background: var(--accent);
+  transform: scaleX(var(--line-progress));
+  transform-origin: left;
+}
+
+.pipeline-stage {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 190px;
+  width: 190px;
+}
+
+.pipeline-stage-label {
+  display: grid;
+  grid-template-rows: 20px 18px 36px;
+  justify-items: center;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 0 14px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  opacity: 0.55;
+}
+
+.pipeline-date {
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.pipeline-node {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: var(--pipeline-paper);
+  box-sizing: border-box;
+}
+
+.pipeline-stage-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.pipeline-stage.is-complete .pipeline-stage-label,
+.pipeline-stage.is-active .pipeline-stage-label {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.pipeline-stage.is-complete .pipeline-node,
+.pipeline-stage.is-active .pipeline-node {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.pipeline-stage.is-active .pipeline-node {
+  box-shadow: 0 0 0 6px var(--accent-bg);
+}
+
+.pipeline-stage.is-active .pipeline-stage-title {
+  font-weight: 650;
+}
+
+.pipeline-detail {
+  min-height: 0;
+  padding: 28px 0;
+  border-top: 1px solid var(--border);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.pipeline-detail-content {
+  display: grid;
+  grid-template-columns: 0.7fr 1.5fr;
+  gap: 64px;
+  animation: pipeline-reveal 250ms ease-out;
+}
+
+.pipeline-kind {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.pipeline-kind span {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--accent-bg);
+}
+
+.pipeline-company h3 {
+  margin: 0 0 12px;
+  color: var(--text-h);
+  font-size: 26px;
+  line-height: 1.45;
+  letter-spacing: -0.045em;
+  word-break: keep-all;
+}
+
+.pipeline-role {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pipeline-period {
+  margin-top: 10px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.pipeline-summary {
+  font-size: 14px;
+  line-height: 1.85;
+  word-break: keep-all;
+}
+
+.pipeline-summary p { margin: 0 0 20px; }
+.pipeline-summary ul { margin: 0; padding: 0; list-style: none; }
+.pipeline-summary li { margin: 0 0 16px; padding-left: 18px; border-left: 2px solid var(--accent-border); }
+.pipeline-summary li:last-child { margin-bottom: 0; }
+.pipeline-appointment { margin-top: 7px; color: var(--text); font-size: 11px; }
+.pipeline-position { color: var(--accent); font-family: var(--mono); font-size: 11px; }
+.pipeline-footer { border-top: 1px solid var(--border); padding-top: 12px; }
+.pipeline-detail:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+.timeline-description {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.8;
+  text-align: left;
+  word-break: keep-all;
+}
+
+.timeline-description p {
+  margin: 0 0 12px;
+  white-space: pre-line;
+}
+
+.timeline-description ul,
+.timeline-description ol {
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+
+.timeline-description a {
+  color: var(--accent);
+}
+
+.timeline-description :is(h3, h4) {
+  margin: 24px 0 12px;
+  font-size: 15px;
+  color: var(--text-h);
+}
+
+.timeline-description strong {
+  color: var(--text-h);
+}
+
+@keyframes pipeline-reveal {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-color-scheme: dark) {
+  .pipeline-section { --pipeline-paper: #1b231e; }
+}
+
+@media (max-width: 760px) {
+  .pipeline-frame { padding: 28px 20px 20px; }
+  .pipeline-inner { gap: 18px; }
+  .pipeline-header { gap: 12px; }
+  .pipeline-header h2 { font-size: 24px; }
+  .pipeline-guide { display: none; }
+  .pipeline-detail { padding: 20px 0; }
+  .pipeline-detail-content { grid-template-columns: 1fr; gap: 20px; }
+  .pipeline-kind { margin-bottom: 10px; }
+  .pipeline-company h3 { font-size: 22px; margin-bottom: 6px; }
+  .pipeline-role { font-size: 12px; }
+  .pipeline-period { margin-top: 6px; font-size: 10px; }
+  .pipeline-summary { font-size: 12px; }
+  .pipeline-footer { gap: 10px; }
+  .pipeline-footer .about-next { gap: 8px; font-size: 10px; }
+}
+
+@media (max-height: 640px) {
+  .pipeline-inner { gap: 14px; }
+  .pipeline-frame { padding-top: 20px; padding-bottom: 16px; }
+  .pipeline-header h2 { font-size: 22px; }
+  .pipeline-header .section-eyebrow { margin-bottom: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipeline-detail-content { animation: none; }
+}
