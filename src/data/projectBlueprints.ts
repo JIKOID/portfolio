@@ -14,7 +14,7 @@ export interface ProjectBlueprint {
   returnPath?: string
 }
 
-// 이력서의 각 업무 항목에 대응하는 구성도입니다. PoC는 실제 도입 여부를 구분합니다.
+// 이력서와 업무 정리의 각 항목에 대응하는 구성도입니다. PoC는 실제 도입 여부를 구분합니다.
 export const projectBlueprints: Record<string, ProjectBlueprint> = {
   "GCP to AWS 서비스 데이터 마이그레이션": {
     "diagramTitle": "서비스 데이터 이전 흐름",
@@ -495,7 +495,8 @@ export const projectBlueprints: Record<string, ProjectBlueprint> = {
       }
     ],
     "outcome": "목적별 DAG·게임별 병렬화",
-    "outcomeLabel": "AppsFlyer SSoT 전환 및 신규 게임 수집 파이프라인 적용"
+    "outcomeLabel": "AppsFlyer SSoT 전환 및 신규 게임 수집 파이프라인 적용",
+    "orchestration": "Cloud Run API 503 재시도 / 리포트 수집 실패 로그 / 매체별 정합성 검증"
   },
   "BI 대시보드 운영": {
     "diagramTitle": "대시보드 운영 및 장애 대응 구성",
@@ -515,7 +516,8 @@ export const projectBlueprints: Record<string, ProjectBlueprint> = {
     ],
     "outcome": "동일 원인 장애 재발 0건",
     "outcomeLabel": "약 6천만 행 조회 장애 조치 후 · 이력서 작성 시점 기준",
-    "parallel": true
+    "parallel": true,
+    "orchestration": "신작 5종 출시 단계별 분석 지원 / SQL·시각화·대시보드 가이드 전사 배포"
   },
   "Text2SQL 서비스 운영": {
     "diagramTitle": "자연어 질의를 분석에 활용하는 흐름",
@@ -612,8 +614,8 @@ export const projectBlueprints: Record<string, ProjectBlueprint> = {
     "diagramTitle": "여러 에이전트가 공유하는 컨텍스트 검색 구조",
     "nodes": [
       {
-        "title": "업무 지식 · 예제 · 스키마",
-        "detail": "컨텍스트 수집·분류"
+        "title": "업무 지식 · 공지사항",
+        "detail": "예제 쿼리·게임 메타데이터·스키마 수집"
       },
       {
         "title": "변경 감지 · 설명 보강",
@@ -633,7 +635,8 @@ export const projectBlueprints: Record<string, ProjectBlueprint> = {
       }
     ],
     "outcome": "응답 정확도 70% → 90%",
-    "outcomeLabel": "Few-shot 컨텍스트 19개 → 49개 · 공유 지식 베이스 통합"
+    "outcomeLabel": "초기 구축 시 Few-shot 19개 → 49개 · 이후 컨텍스트 확장·갱신 자동화",
+    "orchestration": "공지사항 수집 DAG / 벡터 스토어 갱신 자동화 / DEV·PROD 테이블·스토리지 분리"
   },
   "LLM/MLOps 인프라 구축": {
     "diagramTitle": "카카오 클라우드 기반 LLM·ML 운영 구성",
@@ -664,7 +667,11 @@ export const projectBlueprints: Record<string, ProjectBlueprint> = {
         "detail": "af_purchase·파트너 집계"
       },
       {
-        "title": "Partition-Replacement",
+        "title": "동적 청크 수집",
+        "detail": "직전 수집 건수에 따라 호출 범위 조절"
+      },
+      {
+        "title": "파티션 교체 적재",
         "detail": "변경된 코호트 파티션 교체"
       },
       {
@@ -676,8 +683,9 @@ export const projectBlueprints: Record<string, ProjectBlueprint> = {
         "detail": "마케팅팀 자체 조회"
       }
     ],
-    "outcome": "반영 주기 1~2일 → 당일",
-    "outcomeLabel": "게임별 4회 반복 수작업 자동화 · Self-Service 조회 체계"
+    "outcome": "약 19분 → 12분 이내",
+    "outcomeLabel": "D30 → D90 확장·백필 / 예상 API 호출 약 600회 → 약 105회",
+    "orchestration": "분당 60회·쿼리당 30,000행 API 제한에 대응 / 코호트 파티션 교체 적재"
   },
   "클라이언트 변조 기반 어뷰징 탐지 배치 파이프라인 구축": {
     "diagramTitle": "탐지 이후 알림·제재 확인 처리 흐름",
@@ -701,7 +709,7 @@ export const projectBlueprints: Record<string, ProjectBlueprint> = {
     ],
     "outcome": "탐지·알림·후속 처리 자동화",
     "outcomeLabel": "수작업 확인에서 실제 제재 프로세스와 연계되는 배치로 전환",
-    "orchestration": "Airflow DAG 기반 주기적 실행"
+    "orchestration": "Airflow 주기 실행 / 게임 정책 변경 시 해당 탐지 DAG 중지"
   },
   "확률 데이터 분석 및 파이프라인 구축": {
     "diagramTitle": "대외 공개 확률 정보의 집계 구조",
@@ -724,6 +732,102 @@ export const projectBlueprints: Record<string, ProjectBlueprint> = {
       }
     ],
     "outcome": "확률 콘텐츠 11종 전체 집계",
-    "outcomeLabel": "새 콘텐츠 추가 시 마트 구조 변경 없이 확장 가능한 설계"
+    "outcomeLabel": "새 콘텐츠 추가 시 마트 구조 변경 없이 확장 가능한 설계",
+    "orchestration": "신규 보석 뽑기 카테고리 검증·수집 확장 / ASSERT 조건 개선"
+  },
+  "이벤트 로그 스키마 확장 및 수집 서비스 전환": {
+    "diagramTitle": "공통 프로퍼티 도입부터 운영 검증까지",
+    "nodes": [
+      {
+        "title": "게임 이벤트",
+        "detail": "installation_id 프로퍼티 추가"
+      },
+      {
+        "title": "Cloud Run Function",
+        "detail": "테스트 검증 후 수집 서비스 전환"
+      },
+      {
+        "title": "이벤트 로그 테이블",
+        "detail": "컬럼·적재 파이프라인 변경"
+      },
+      {
+        "title": "백필 · 모니터링",
+        "detail": "기존 데이터 보완·수집 상태 확인"
+      }
+    ],
+    "orchestration": "GitLab CI 배포 절차 / 앱 업데이트·재설치 QA / 설치 이벤트 흐름 문서화",
+    "outcome": "스키마 변경·운영 전환 완료",
+    "outcomeLabel": "수집 코드·테이블·적재·기존 데이터를 함께 변경하고 백필 후 검증"
+  },
+  "게임 메타데이터 연동 및 공통 스키마 설계": {
+    "diagramTitle": "게임별 메타데이터의 연동·활용 흐름",
+    "nodes": [
+      {
+        "title": "게임별 시트",
+        "detail": "아이템·상품·재화 원본"
+      },
+      {
+        "title": "공통 스키마 설계",
+        "detail": "Item·ShopProduct 공통 항목 정리"
+      },
+      {
+        "title": "연동 검증",
+        "detail": "다국어 매핑·개발·QA 확인"
+      },
+      {
+        "title": "운영툴 · Redash",
+        "detail": "메타데이터·아이템 필터 반영"
+      }
+    ],
+    "orchestration": "운영용 뷰와 개발·QA 조회 경로 분리 / 테이블·컬럼 명세 문서화",
+    "outcome": "2개 게임 연동·공통 모델링",
+    "outcomeLabel": "랜덤다이스2·Sheep Duck 연동 및 분석 에이전트 컨텍스트 활용"
+  },
+  "데이터 분석 에이전트 평가 체계 구축": {
+    "diagramTitle": "대표 질문을 기준으로 반복 검증하는 평가 절차",
+    "nodes": [
+      {
+        "title": "질문 · 정답 SQL",
+        "detail": "게임별 분석 기준 작성·검증"
+      },
+      {
+        "title": "Langfuse 데이터셋",
+        "detail": "평가 테스트 케이스 등록"
+      },
+      {
+        "title": "쿼리 · 리포트 검증",
+        "detail": "기존 분석 재현·전체 흐름 테스트"
+      },
+      {
+        "title": "지침 · 예제 보완",
+        "detail": "운영 담당자 피드백 반영"
+      }
+    ],
+    "outcome": "4개 게임 평가 데이터셋",
+    "outcomeLabel": "실제 리포트와 정답 쿼리를 기준으로 생성 결과 검증",
+    "returnPath": "게임 지침·비즈니스 로직·예제 쿼리 개선 → 동일 질문으로 재검증"
+  },
+  "대용량 데이터 추출 및 분석 지표 검증": {
+    "diagramTitle": "대량 추출 전 검증과 데이터 제공 절차",
+    "nodes": [
+      {
+        "title": "이벤트 로그",
+        "detail": "세션·구매·게임 운영 데이터"
+      },
+      {
+        "title": "집계 기준 검토",
+        "detail": "쿼리 비용·제재·이상 로그 확인"
+      },
+      {
+        "title": "샘플 · 모의 검증",
+        "detail": "일부 데이터로 결과 사전 확인"
+      },
+      {
+        "title": "실제 데이터 제공",
+        "detail": "매체 S3·인포그래픽 데이터"
+      }
+    ],
+    "outcome": "세션 약 3.5억 건 전달",
+    "outcomeLabel": "1년치 구매 약 576만 건 함께 제공 / 인포그래픽 50개 지표 별도 검증"
   }
 }

@@ -7,23 +7,24 @@
 }
 .education-inner { max-width: 1160px; margin: 0 auto; }
 .education-heading { margin-bottom: 24px; }
-.education-heading h2 { margin: 0 0 18px; color: var(--text-h); font-size: 34px; font-weight: 600; letter-spacing: -0.04em; }
-.education-heading > p:last-child { font-size: 13px; line-height: 1.8; }
+.education-heading h2 { margin: 0 0 18px; color: var(--text-h); font-size: clamp(1.875rem, 3vw, 2.5rem); font-weight: 600; letter-spacing: -0.03em; }
+.education-heading > p:last-child { font-size: var(--font-body); line-height: 1.8; }
 .education-list { margin: 0; padding: 0; list-style: none; }
-.education-list > li { display: grid; grid-template-columns: 0.8fr 1.4fr; gap: 64px; padding: 36px 0; border-bottom: 1px solid var(--border); }
-.education-period { margin: 0 0 12px; color: var(--accent); font-family: var(--mono); font-size: 11px; }
-.education-meta h3 { margin: 0 0 10px; color: var(--text-h); font-size: 20px; line-height: 1.6; letter-spacing: -0.035em; word-break: keep-all; }
-.education-org { color: var(--text); font-size: 12px; line-height: 1.7; }
+.education-list > li { display: grid; grid-template-columns: 0.8fr 1.4fr; gap: 64px; padding: 40px 0; border-bottom: 1px solid var(--border); }
+.education-period { margin: 0 0 12px; color: var(--accent); font-family: var(--mono); font-size: var(--font-meta); }
+.education-meta h3 { margin: 0 0 10px; color: var(--text-h); font-size: 1.375rem; line-height: 1.6; letter-spacing: -0.025em; word-break: keep-all; }
+.education-org { color: var(--text); font-size: var(--font-small); line-height: 1.7; }
 .education-list .timeline-description > :first-child { margin-top: 0; }
 .education-footer { display: flex; justify-content: flex-end; padding-top: 24px; }
-.education-footer a { padding: 8px 0; color: var(--text-h); font-size: 12px; text-decoration: none; }
+.education-footer a { padding: 8px 0; color: var(--text-h); font-size: var(--font-meta); text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
 .education-footer a > span { margin-left: 16px; }
 .education-footer a:hover { color: var(--accent); }
 .education-footer a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .education-section { padding: 56px 24px 24px; }
-  .education-heading h2 { font-size: 28px; }
-  .education-list > li { grid-template-columns: 1fr; gap: 20px; padding: 28px 0; }
-  .education-meta h3 { font-size: 18px; }
-  .education-list .timeline-description { font-size: 13px; }
+  .education-list > li { grid-template-columns: 1fr; gap: 20px; padding: 40px 0; }
 }

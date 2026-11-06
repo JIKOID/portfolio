@@ -1,6 +1,6 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
+  --text: #414d46;
+  --text-h: #19271f;
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
@@ -11,12 +11,17 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --heading: var(--sans);
+  --mono: 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-body: 1.125rem;
+  --font-small: 1rem;
+  --font-meta: 0.875rem;
+  --font-label: 0.8125rem;
+  --reading-width: 76ch;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
+  font: 100%/1.75 var(--sans);
+  letter-spacing: -0.01em;
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
@@ -25,15 +30,16 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+  @media (max-width: 760px) {
+    --font-body: 1.0625rem;
+    --font-small: 0.9375rem;
   }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
+    --text: #c5cec8;
+    --text-h: #f1f6f2;
     --bg: #16171d;
     --border: #2e303a;
     --code-bg: #1f2028;
@@ -67,12 +73,20 @@ html {
 
 body {
   margin: 0;
+  font-size: var(--font-body);
+  overflow-wrap: anywhere;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 h1,
 h2 {
   font-family: var(--heading);
-  font-weight: 500;
+  font-weight: 650;
   color: var(--text-h);
 }
 
@@ -107,7 +121,7 @@ code,
 }
 
 code {
-  font-size: 15px;
+  font-size: 0.9em;
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);

@@ -1,7 +1,7 @@
 .hero-section {
   --hero-paper: #f7f8f2;
   --hero-ink: #283b32;
-  --hero-muted: #68766c;
+  --hero-muted: #526056;
   --hero-wash: #e8eddf;
   --hero-type: #e3e8dc;
   position: relative;
@@ -17,16 +17,18 @@
 }
 
 .hero-bottomline {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  min-height: 104px;
 }
 
 .hero-index {
   font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: var(--font-label);
+  letter-spacing: 0.06em;
   color: var(--hero-muted);
 }
 
@@ -68,24 +70,12 @@
   animation: hero-enter 800ms ease-out both;
 }
 
-.hero-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0 0 23px;
-  font-family: var(--mono);
-  font-size: 11px;
-  line-height: 1.5;
-  letter-spacing: 0.14em;
-  color: var(--accent);
-}
-
 .hero-title {
   margin: 0;
   color: var(--hero-ink);
   font-size: clamp(36px, 3.6vw, 54px);
-  font-weight: 450;
-  letter-spacing: -0.065em;
+  font-weight: 500;
+  letter-spacing: -0.04em;
   line-height: 1.4;
   word-break: keep-all;
 }
@@ -122,9 +112,9 @@
 
 .hero-caption {
   margin-top: 20px;
-  font-size: 14px;
+  font-size: var(--font-body);
   line-height: 1.7;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   color: var(--hero-muted);
   word-break: keep-all;
 }
@@ -175,14 +165,9 @@
   display: inline-block;
   margin-top: -6px;
   font-family: 'Bradley Hand', 'Segoe Print', cursive;
-  font-size: 17px;
+  font-size: 1.0625rem;
   color: var(--hero-muted);
   transform: rotate(-4deg);
-}
-
-.hero-bottomline {
-  position: relative;
-  min-height: 78px;
 }
 
 .hero-index span {
@@ -192,7 +177,7 @@
 
 .hero-bottom-note {
   color: var(--hero-muted);
-  font-size: 11px;
+  font-size: var(--font-meta);
   letter-spacing: -0.025em;
 }
 
@@ -203,11 +188,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 6px 12px;
   border-radius: 8px;
   color: var(--hero-muted);
-  font-size: 11px;
+  font-size: var(--font-meta);
   line-height: 1.5;
   text-decoration: none;
   white-space: nowrap;
@@ -276,24 +261,24 @@
 
 .about-profile {
   display: grid;
-  grid-template-columns: 0.85fr 1.35fr;
-  gap: clamp(32px, 5vw, 80px);
+  grid-template-columns: 0.8fr 1.4fr;
+  gap: clamp(32px, 4vw, 64px);
   align-items: start;
 }
 
 .about-eyebrow {
   margin-bottom: 24px;
   color: var(--accent);
-  font-size: 12px;
+  font-size: var(--font-meta);
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
 }
 
 .about-heading h2 {
   font-size: clamp(28px, 2.7vw, 40px);
-  font-weight: 600;
+  font-weight: 650;
   line-height: 1.55;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.035em;
   word-break: keep-all;
 }
 
@@ -302,7 +287,7 @@
   align-items: center;
   gap: 14px;
   margin-top: 32px;
-  font-size: 16px;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-h);
 }
@@ -311,20 +296,21 @@
   padding-left: 14px;
   border-left: 1px solid var(--border);
   color: var(--text);
-  font-family: var(--mono);
-  font-size: 11px;
+  font-family: var(--sans);
+  font-size: var(--font-meta);
   font-weight: 400;
 }
 
 .about-bio {
   color: var(--text);
-  font-size: 15px;
-  line-height: 1.95;
+  font-size: var(--font-body);
+  line-height: 1.85;
   word-break: keep-all;
+  max-width: var(--reading-width);
 }
 
 .about-bio p {
-  margin: 0 0 18px;
+  margin: 0 0 24px;
 }
 
 .about-bio p:last-child {
@@ -333,7 +319,7 @@
 
 .about-bio strong {
   color: var(--text-h);
-  font-weight: 550;
+  font-weight: 650;
 }
 
 .about-email {
@@ -342,8 +328,10 @@
   margin-top: 16px;
   padding: 6px 0;
   color: var(--accent);
-  font-size: 12px;
+  font-size: var(--font-small);
   text-decoration: none;
+  min-height: 44px;
+  align-items: center;
 }
 
 .about-email:hover { text-decoration: underline; }
@@ -352,21 +340,21 @@
 .about-skills {
   display: grid;
   grid-template-columns: 1.3fr 1fr 1fr;
-  gap: 24px;
-  padding: 22px 0;
+  gap: 28px;
+  padding: 28px 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
 
-.about-skills h3 { margin: 0 0 12px; color: var(--text-h); font-size: 11px; font-weight: 600; }
-.about-skills ul { display: flex; flex-wrap: wrap; gap: 5px 8px; margin: 0; padding: 0; list-style: none; }
-.about-skills li { padding: 2px 6px; background: var(--accent-bg); border-radius: 4px; color: var(--accent); font-size: 10px; line-height: 1.7; }
+.about-skills h3 { margin: 0 0 14px; color: var(--text-h); font-size: var(--font-small); font-weight: 600; }
+.about-skills ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.about-skills li { padding: 4px 10px; background: var(--accent-bg); border-radius: 4px; color: var(--accent); font-size: var(--font-meta); line-height: 1.65; }
 
 .about-connect h3 {
   margin: 0 0 16px;
   color: var(--text-h);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--font-small);
+  font-weight: 600;
 }
 
 .about-links {
@@ -378,12 +366,13 @@
 .about-link {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 24px;
   border: 1px solid var(--border);
   border-radius: 12px;
   color: var(--text-h);
   text-decoration: none;
   transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+  gap: 2px;
 }
 
 .about-link:hover {
@@ -422,14 +411,14 @@
 }
 
 .about-link-label {
-  font-size: 15px;
+  font-size: 1.125rem;
   font-weight: 600;
 }
 
 .about-link-description {
   margin-top: 5px;
   color: var(--text);
-  font-size: 11px;
+  font-size: var(--font-small);
   line-height: 1.7;
   word-break: keep-all;
 }
@@ -449,8 +438,8 @@
 .about-page-index {
   color: var(--text);
   font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  font-size: var(--font-label);
+  letter-spacing: 0.03em;
 }
 
 .about-next {
@@ -459,8 +448,9 @@
   gap: 20px;
   padding: 8px 0;
   color: var(--text-h);
-  font-size: 12px;
+  font-size: var(--font-small);
   text-decoration: none;
+  min-height: 44px;
 }
 
 .about-next:hover {
@@ -492,98 +482,29 @@
   .hero-section {
     --hero-paper: #191f1c;
     --hero-ink: #e0e7da;
-    --hero-muted: #a0ae9f;
+    --hero-muted: #bac8bc;
     --hero-wash: #2b3a2f;
     --hero-type: #263029;
   }
 }
 
 @media (max-width: 760px) {
-  .hero-section {
-    padding: 24px 24px 20px;
-  }
+  .hero-section { padding: 24px 24px 20px; }
+  .hero-backdrop { top: 17%; font-size: 17vw; }
+  .hero-content { gap: 12px; padding: 24px 0; }
+  .hero-title { font-size: clamp(32px, 7.5vw, 47px); }
+  .hero-title .hero-greeting { margin-bottom: 7px; }
+  .hero-caption { margin-top: 17px; }
+  .hero-index, .hero-bottom-note { display: none; }
 
-  .hero-backdrop {
-    top: 17%;
-    font-size: 17vw;
-  }
-
-  .hero-content {
-    gap: 12px;
-    padding: 24px 0;
-  }
-
-  .hero-eyebrow {
-    margin-bottom: 16px;
-    font-size: 10px;
-  }
-
-  .hero-title {
-    font-size: clamp(32px, 7.5vw, 47px);
-    line-height: 1.4;
-  }
-
-  .hero-title .hero-greeting {
-    margin-bottom: 7px;
-  }
-
-  .hero-caption {
-    margin-top: 17px;
-    font-size: 12px;
-  }
-
-  .hero-artwork-caption {
-    font-size: 14px;
-  }
-
-  .hero-bottomline {
-    min-height: 88px;
-  }
-
-  .hero-index,
-  .hero-bottom-note {
-    display: none;
-  }
-
-  .about-section {
-    padding: 64px 24px 24px;
-  }
-
-  .about-inner {
-    gap: 32px;
-  }
-
-  .about-profile {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .about-heading h2 {
-    font-size: 30px;
-  }
-
-  .about-name {
-    margin-top: 20px;
-  }
-
-  .about-bio {
-    font-size: 14px;
-  }
-
-  .about-skills { grid-template-columns: 1fr; gap: 20px; }
-
-  .about-links {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .about-link {
-    padding: 16px;
-  }
-
-  .about-link-description {
-    font-size: 10px;
-  }
+  .about-section { padding: 64px 24px 24px; }
+  .about-inner { gap: 32px; }
+  .about-profile { grid-template-columns: 1fr; gap: 32px; }
+  .about-heading h2 { font-size: 1.875rem; }
+  .about-name { margin-top: 20px; }
+  .about-skills { grid-template-columns: 1fr; }
+  .about-links { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .about-link { padding: 18px; }
 }
 
 @media (max-height: 740px) and (max-width: 760px) {
@@ -605,4 +526,14 @@
   .hero-scroll-arrow {
     animation: none;
   }
+}
+
+@media (min-width: 761px) and (max-width: 980px) {
+  .about-profile { grid-template-columns: 1fr; gap: 36px; }
+  .about-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 380px) {
+  .about-links { grid-template-columns: 1fr; }
+  .about-footer { flex-wrap: wrap; gap: 10px; }
 }
